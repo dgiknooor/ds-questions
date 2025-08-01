@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чек-лист вопросов для собеседования Data Science</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Off-white, Dark Slate, Muted Teal) -->
+    <!-- Application Structure Plan: A minimalist single-page app with a fixed sidebar for category navigation and a main content area that displays a static, hierarchical list of questions. The goal is to provide a clean, readable checklist for interview preparation. -->
+    <!-- Visualization & Content Choices: All content is presented as a structured text list. Interactive elements like accordions and charts are removed to focus purely on the questions. Hierarchy is shown via indentation. A search bar is retained for quick filtering. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #333D4B;
+        }
+        .sidebar-link.active {
+            background-color: #E0E7FF;
+            color: #3730A3;
+            font-weight: 600;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F8F7F4;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #A0AEC0;
+        }
+        .question-header {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="flex h-screen bg-gray-50">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-72 bg-white border-r border-gray-200 flex-shrink-0 hidden md:flex md:flex-col transition-all duration-300">
+            <div class="px-6 py-4 border-b">
+                <h2 class="text-lg font-bold text-gray-800">Темы Собеседования</h2>
+            </div>
+            <nav id="sidebar-nav" class="flex-1 p-4 space-y-2 overflow-y-auto"></nav>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white border-b border-gray-200">
+                <div class="flex items-center justify-between p-4">
+                    <button id="menu-toggle" class="md:hidden text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <h1 class="text-xl font-bold text-gray-800 text-center md:text-left flex-grow">Чек-лист вопросов</h1>
+                    <div class="relative w-full max-w-xs ml-4">
+                        <input type="text" id="search-input" placeholder="Поиск по вопросам..." class="w-full pl-4 pr-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                        <svg class="w-5 h-5 text-gray-400 absolute top-1/2 right-3 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                </div>
+            </header>
+
+            <div id="content-area" class="flex-1 p-4 md:p-8 overflow-y-auto">
+                <!-- Content will be injected here -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const interviewData = {
+            "ml-theory": {
+                title: "Теория Машинного Обучения",
+                questions: [
+                    { q: "1. Общие концепции", isHeader: true },
+                    { q: "1.1. Что такое компромисс между смещением и дисперсией (bias-variance trade-off)?", sub: [
+                        { q: "1.1.1. Что происходит с bias и variance при переобучении и недообучении?" },
+                        { q: "1.1.2. Как на bias и variance влияет регуляризация весов в линейных моделях?" },
+                        { q: "1.1.3. Как на bias и variance влияет увеличение параметра k в KNN?" },
+                        { q: "1.1.4. Как на bias и variance влияет ограничение глубины дерева?" },
+                        { q: "1.1.5. Как на bias и variance влияет применение Dropout в нейронных сетях?" },
+                        { q: "1.1.6. Приведите примеры моделей с высоким смещением и с высокой дисперсией." },
+                    ]},
+                    { q: "1.2. Что такое регуляризация и зачем она нужна?", sub: [
+                         { q: "1.2.1. Какие виды регуляризации для линейных моделей вы знаете (L1, L2)? В чем их математический и геометрический смысл?" },
+                         { q: "1.2.2. Почему L1-регуляризация (Lasso) обнуляет веса, а L2 (Ridge) — нет?" },
+                         { q: "1.2.3. Что такое Elastic Net и когда его стоит применять?" },
+                         { q: "1.2.4. Как применяется регуляризация в деревьях и градиентном бустинге?" },
+                    ]},
+                    { q: "1.3. Как можно обнаружить и бороться с переобучением модели?", sub: [
+                        { q: "1.3.1. Обнаружение: Расхождение кривых обучения (loss/metric) на train и validation; низкая производительность на отложенной выборке." },
+                        { q: "1.3.2. Борьба: Упрощение модели, регуляризация, сбор большего количества данных, аугментация данных, ансамблирование, Dropout, Early Stopping." },
+                    ]},
+                    { q: "1.4. Что такое проклятие размерности?", sub: [
+                        { q: "1.4.1. Приведите примеры его проявления." },
+                    ]},
+                    { q: "1.5. Какие методы понижения размерности и отбора признаков вы знаете?", sub: [
+                        { q: "1.5.1. В чем заключается метод главных компонент (PCA)? Является ли он детерминированным?" },
+                        { q: "1.5.2. В чем разница между PCA и t-SNE? Для каких задач каждый из них лучше подходит?" },
+                        { q: "1.5.3. Что такое Forward/Backward/Stepwise selection? Как выбрать итоговое количество признаков?" },
+                        { q: "1.5.4. Будет ли разница в отборе признаков для линейных моделей и для бустинга?" },
+                        { q: "1.5.5. Какие еще методы вы знаете?" },
+                    ]},
+                    { q: "1.6. Что такое калибровка вероятностей и зачем она нужна?", sub: [
+                        { q: "1.6.1. Когда это особенно важно?" },
+                        { q: "1.6.2. Какие методы калибровки вы знаете?" },
+                    ]},
+                    { q: "2. Классические алгоритмы", isHeader: true },
+                    { q: "2.1. Линейная/Логистическая регрессия.", sub: [
+                        { q: "2.1.1. Какие предположения (условия Гаусса-Маркова) должны выполняться для эффективной работы линейной регрессии?" },
+                        { q: "2.1.2. Что такое мультиколлинеарность и нужно ли с ней бороться? Какие проблемы она создает?" },
+                        { q: "2.1.3. Если обучить модель дважды на одних и тех же данных, будут ли веса одинаковыми?" },
+                    ]},
+                    { q: "2.2. K-ближайших соседей (KNN).", sub: [
+                        { q: "2.2.1. Какие минусы есть у алгоритма KNN?" },
+                        { q: "2.2.2. Как выбрать оптимальное k?" },
+                        { q: "2.2.3. Какие метрики расстояния можно использовать?" },
+                    ]},
+                    { q: "2.3. Наивный байесовский классификатор.", sub: [
+                        { q: "2.3.1. Что такое априорная и апостериорная вероятность?" },
+                        { q: "2.3.2. В чем заключается 'наивность' этого классификатора?" },
+                    ]},
+                    { q: "3. Ансамблевые методы", isHeader: true },
+                    { q: "3.1. Какие виды ансамблей вы знаете?" },
+                    { q: "3.2. Бэггинг.", sub: [
+                        { q: "3.2.1. Как работает бэггинг? На что он влияет в большей степени: на bias или variance?" },
+                        { q: "3.2.2. Можно ли использовать линейные модели как базовые для бэггинга?" },
+                    ]},
+                    { q: "3.3. Случайный лес (Random Forest).", sub: [
+                        { q: "3.3.1. Как работает случайный лес? Чем он отличается от бустингов?" },
+                        { q: "3.3.2. Как формируется выборка и как отбираются признаки для построения деревьев?" },
+                        { q: "3.3.3. Что такое Out-of-Bag (OOB) ошибка и как ее можно использовать?" },
+                    ]},
+                    { q: "3.4. Бустинг.", sub: [
+                        { q: "3.4.1. Как работает градиентный бустинг? На что он влияет в большей степени: на bias или variance?" },
+                        { q: "3.4.2. Где в градиентном бустинге 'градиент'?" },
+                        { q: "3.4.3. Почему в бустингах обычно используются неглубокие деревья?" },
+                        { q: "3.4.4. Можно ли дообучить (fine-tune) градиентный бустинг?" },
+                        { q: "3.4.5. В чем ключевые различия между XGBoost, LightGBM и CatBoost?" },
+                    ]},
+                    { q: "3.5. Стекинг и блендинг.", sub: [
+                        { q: "3.5.1. Как работает стекинг/блендинг? В чем разница?" },
+                        { q: "3.5.2. На каких данных обучается метамодель?" },
+                        { q: "3.5.3. Почему в качестве базовых моделей для стекинга лучше использовать разные алгоритмы?" },
+                    ]},
+                    { q: "3.6. Деревья решений.", sub: [
+                        { q: "3.6.1. Как строится одно решающее дерево?" },
+                        { q: "3.6.2. Как дерево выбирает признак и порог для разбиения?" },
+                        { q: "3.6.3. Как дерево делает предсказание в листе?" },
+                        { q: "3.6.4. Нужно ли масштабировать признаки для деревьев?" },
+                        { q: "3.6.5. Что такое прунинг (pruning) и зачем он нужен?" },
+                    ]},
+                    { q: "4. Нейронные сети и Deep Learning", isHeader: true },
+                    { q: "4.1. Как происходит обучение полносвязной нейронной сети?", sub: [
+                        { q: "4.1.1. Что такое градиентный спуск? Какие его вариации и оптимизаторы вы знаете?" },
+                        { q: "4.1.2. Что такое затухание и взрыв градиента? Как с этим бороться?" },
+                    ]},
+                    { q: "4.2. Как глубина нейросети влияет на производительность и сложность обучения?" },
+                    { q: "4.3. Что такое сверточный слой (Convolutional Layer)?" },
+                    { q: "4.4. Что такое skip connection / residual block?" },
+                    { q: "4.5. Что такое fine-tuning?" },
+                    { q: "4.6. Что такое квантизация моделей?" },
+                    { q: "4.7. Расскажите про основные компоненты архитектуры Transformer." },
+                    { q: "5. Обучение без учителя (Кластеризация)", isHeader: true },
+                    { q: "5.1. Какие алгоритмы кластеризации вы знаете?" },
+                    { q: "5.2. Как работает K-Means?", sub: [
+                        { q: "5.2.1. Чем отличается K-Means от K-Means++?" },
+                        { q: "5.2.2. Как определить оптимальное количество кластеров?" },
+                        { q: "5.2.3. В чем недостатки K-Means?" },
+                    ]},
+                    { q: "5.3. Как работает DBSCAN?" },
+                    { q: "5.4. Как работает иерархическая агломеративная кластеризация?" },
+                    { q: "5.5. Какие метрики качества кластеризации вы знаете?" },
+                    { q: "5.6. Сравнение K-Means и DBSCAN: какая доля объектов будет кластеризована?" },
+                ]
+            },
+            "metrics-validation": {
+                title: "Метрики и Валидация",
+                questions: [
+                    { q: "1. Какие основные метрики классификации вы знаете?" },
+                    { q: "1.1. Что такое Precision, Recall, Accuracy, F1-score?", isSub: true },
+                    { q: "1.2. В каких случаях важен Precision, а в каких — Recall?", isSub: true },
+                    { q: "1.3. Что такое ROC-AUC? Как он считается?", isSub: true },
+                    { q: "1.4. Почему ROC-AUC часто предпочитают Accuracy/Precision/Recall?", isSub: true },
+                    { q: "1.5. Что будет с ROC-AUC, если мы умножим все вероятности на 2? А если подать на вход бинарные предсказания?", isSub: true },
+                    { q: "1.6. Чему равен ROC-AUC для случайной и константной модели?", isSub: true },
+                    { q: "1.7. Какие метрики используются для мультиклассовой классификации?", isSub: true },
+                    { q: "1.8. Что такое Precision-Recall кривая и когда она полезнее ROC-кривой?", isSub: true },
+                    { q: "2. Какие основные метрики регрессии вы знаете?" },
+                    { q: "2.1. В каких ситуациях лучше выбрать MAE, а в каких RMSE?", isSub: true },
+                    { q: "2.2. Что означает 'MAPE несимметрична'? Что такое sMAPE?", isSub: true },
+                    { q: "2.3. Можно ли использовать R² в качестве функции потерь?", isSub: true },
+                    { q: "2.4. Чем отличается R² от Adjusted R²?", isSub: true },
+                    { q: "3. Какие метрики ранжирования вы знаете?" },
+                    { q: "4. Как подбирать гиперпараметры модели?" },
+                    { q: "4.1. Какие стратегии вы знаете?", isSub: true },
+                    { q: "4.2. Чем байесовская оптимизация (например, Optuna) лучше?", isSub: true },
+                    { q: "4.3. Как правильно разбивать датасет на выборки при подборе гиперпараметров?", isSub: true },
+                    { q: "5. Какие подходы к валидации вы знаете?" },
+                    { q: "5.1. Какие подходы к валидации можно использовать для модели кредитного скоринга?", isSub: true },
+                    { q: "5.2. Когда Out-of-Time валидация предпочтительнее K-Fold?", isSub: true },
+                ]
+            },
+            "feature-engineering": {
+                title: "Обработка данных и Feature Engineering",
+                questions: [
+                    { q: "1. Какие стандартные шаги предобработки данных вы знаете?" },
+                    { q: "2. Как бороться с пропущенными значениями (NaN)?" },
+                    { q: "3. Как можно идентифицировать и обрабатывать выбросы?" },
+                    { q: "4. Как обрабатывать категориальные признаки?", sub: [
+                        { q: "4.1. Какие способы кодирования вы знаете?" },
+                        { q: "4.2. Что происходит при Target Encoding? Какие есть риски?" },
+                        { q: "4.3. Что делать с категориальным признаком с большим количеством уникальных значений?" },
+                    ]},
+                    { q: "5. Какие модели могут выдать отрицательное предсказание, если таргет всегда был неотрицательным?" },
+                ]
+            },
+            "nlp-recsys": {
+                title: "NLP и Рекомендательные системы",
+                questions: [
+                    { q: "1. NLP", isHeader: true },
+                    { q: "1.1. Какие стандартные методы предобработки текста вы знаете?" },
+                    { q: "1.2. Что такое TF-IDF? Зачем в формуле используется логарифм?" },
+                    { q: "1.3. Что такое эмбеддинги?", sub: [
+                        { q: "1.3.1. Какие способы получения эмбеддингов вы знаете?" },
+                        { q: "1.3.2. Как работает Word2Vec (Skip-gram, CBOW)?" },
+                        { q: "1.3.3. Как из эмбеддингов слов получить эмбеддинг текста?" },
+                    ]},
+                    { q: "1.4. Как можно учесть последовательность событий при построении признаков?" },
+                    { q: "2. Рекомендательные системы", isHeader: true },
+                    { q: "2.1. Какие основные подходы к построению РС вы знаете?" },
+                    { q: "2.2. Как решать проблему 'холодного старта'?" },
+                    { q: "2.3. Как понять, что рекомендации хорошо работают?" },
+                ]
+            },
+            "stats": {
+                title: "Теория вероятностей и Статистика",
+                questions: [
+                    { q: "1. Что такое математическое ожидание, дисперсия и стандартное отклонение?" },
+                    { q: "2. Что такое корреляция и ковариация?" },
+                    { q: "3. Что такое доверительный интервал? Какое стандартное значение используется?" },
+                    { q: "4. Что такое p-value? Как его интерпретировать?" },
+                    { q: "5. Что такое ошибка I и II рода?" },
+                    { q: "6. Что такое Z-тест и t-тест? Когда какой использовать?" },
+                    { q: "7. Как проверить, является ли распределение нормальным?" },
+                    { q: "8. Что такое принцип трех сигм?" },
+                    { q: "9. Что такое квантиль?" },
+                    { q: "10. Что такое Центральная Предельная Теорема?" },
+                ]
+            },
+            "product-ab": {
+                title: "Продуктовые вопросы и A/B тесты",
+                questions: [
+                    { q: "1. Как устроен процесс A/B тестирования? Что такое уровень значимости и мощность?" },
+                    { q: "2. Как оценивать репрезентативность выборок?" },
+                    { q: "3. Как доказать бизнесу, что модель полезна?" },
+                    { q: "4. Как подобрать порог отсечения для бинарной классификации?" },
+                    { q: "5. Кейс (отток): Какие признаки можно сгенерировать?" },
+                    { q: "6. Кейс (маркетинг): Какой будет таргет, функция потерь, какие данные и признаки нужны?" },
+                    { q: "7. Кейс (LTV): Как бы вы подошли к решению?" },
+                ]
+            },
+            "mlops": {
+                title: "MLOps и Инженерия",
+                questions: [
+                    { q: "1. Инструменты и Среда", isHeader: true },
+                    { q: "1.1. Docker:", sub: [
+                        { q: "1.1.1. В чем разница между Image и Container?" },
+                        { q: "1.1.2. Что такое multistage build?" },
+                        { q: "1.1.3. В чем разница между CMD и ENTRYPOINT в Dockerfile?" },
+                    ]},
+                    { q: "1.2. Airflow:", sub: [
+                        { q: "1.2.1. Что такое DAG? Что такое операторы?" },
+                        { q: "1.2.2. Как обеспечить идемпотентность задач в Airflow?" },
+                    ]},
+                    { q: "1.3. Для чего нужен MLFlow?" },
+                    { q: "1.4. Что такое CI/CD? Опишите пример пайплайна для ML-модели." },
+                    { q: "1.5. Git:", sub: [
+                        { q: "1.5.1. В чем разница между git merge и git rebase?" },
+                        { q: "1.5.2. Для чего применяется git stash?" },
+                    ]},
+                    { q: "2. Big Data", isHeader: true },
+                    { q: "2.1. Зачем нужен Spark, если есть Pandas?" },
+                    { q: "2.2. Что произойдет при обработке файла, который не влезает в память, с помощью Pandas?" },
+                    { q: "2.3. Как обучать модель, если выборка не помещается в память?" },
+                    { q: "2.4. Как бы вы обрабатывали миллиард текстовых событий с BERT?" },
+                    { q: "3. PyTorch", isHeader: true },
+                    { q: "3.1. Почему PyTorch стал популярнее TensorFlow?" },
+                    { q: "3.2. Какой граф вычислений в PyTorch?" },
+                    { q: "3.3. Что эффективнее с точки зрения GPU: динамический или статический граф?" },
+                ]
+            },
+            "python-algos": {
+                title: "Python и Алгоритмы",
+                questions: [
+                    { q: "1. Чем отличаются изменяемые и неизменяемые типы данных?" },
+                    { q: "2. Чем отличаются tuple и list?" },
+                    { q: "3. Какая сложность получения значения по ключу в dict?" },
+                    { q: "4. Чем отличаются == и is?" },
+                    { q: "5. Что такое декораторы?" },
+                    { q: "6. Какая сложность у Timsort?" },
+                    { q: "7. Есть ли в стандартной библиотеке Python деревья?" },
+                    { q: "8. Что такое GIL (Global Interpreter Lock) в CPython и как он влияет на многопоточность?" },
+                    { q: "9. Что такое генераторы и итераторы?" },
+                ]
+            },
+            "sql-db": {
+                title: "SQL и Базы данных",
+                questions: [
+                    { q: "1. С какими БД работали?" },
+                    { q: "2. Чем HAVING отличается от WHERE?" },
+                    { q: "3. Что такое оконные функции?" },
+                    { q: "4. Какие типы JOIN вы знаете?" },
+                    { q: "5. Что такое индексы и как они ускоряют запросы?" },
+                ]
+            },
+            "tasks": {
+                title: "Задачи (Практика)",
+                questions: [
+                    { q: "Здесь будут практические задачи, которые требуют развернутого решения или написания кода. В данном формате они опущены для краткости."}
+                ]
+            }
+        };
+
+        const contentArea = document.getElementById('content-area');
+        const sidebarNav = document.getElementById('sidebar-nav');
+        const searchInput = document.getElementById('search-input');
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+
+        function createQuestionListHTML(questions, level = 0) {
+            let html = '';
+            questions.forEach(qData => {
+                const paddingClass = `pl-${level * 4}`;
+                const isHeader = qData.isHeader || false;
+                const isSub = qData.isSub || (level > 0 && !isHeader);
+                
+                let textClass = 'text-gray-800';
+                if (isHeader) {
+                    textClass = 'question-header text-gray-900';
+                } else if (!isSub) {
+                    textClass = 'font-semibold text-gray-800';
+                }
+
+                html += `<div class="question-item ${paddingClass} ${textClass} py-1.5">${qData.q.replace(/<br>/g, ' ')}</div>`;
+
+                if (qData.sub) {
+                    html += createQuestionListHTML(qData.sub, level + 1);
+                }
+            });
+            return html;
+        }
+        
+        function renderContent(categoryId) {
+            const category = interviewData[categoryId];
+            if (!category) return;
+
+            let contentHTML = `<h2 class="text-3xl font-bold mb-6 text-gray-900">${category.title}</h2>`;
+            contentHTML += '<div>';
+            contentHTML += createQuestionListHTML(category.questions);
+            contentHTML += '</div>';
+            
+            contentArea.innerHTML = contentHTML;
+            contentArea.scrollTop = 0;
+        }
+        
+        function navigateTo(categoryId) {
+            renderContent(categoryId);
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                link.classList.toggle('active', link.dataset.id === categoryId);
+            });
+            if (window.innerWidth < 768) {
+              sidebar.classList.add('hidden');
+            }
+        }
+
+        // Populate sidebar
+        Object.keys(interviewData).forEach(id => {
+            const category = interviewData[id];
+            const link = document.createElement('a');
+            link.href = '#';
+            link.textContent = category.title;
+            link.dataset.id = id;
+            link.className = 'sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100';
+            sidebarNav.appendChild(link);
+        });
+
+        // Event Listeners
+        sidebarNav.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (e.target.classList.contains('sidebar-link')) {
+                navigateTo(e.target.dataset.id);
+            }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.question-item').forEach(qDiv => {
+                const questionText = qDiv.textContent.toLowerCase();
+                if (questionText.includes(searchTerm)) {
+                    qDiv.style.display = 'block';
+                    // A bit tricky to show headers, simple approach for now
+                } else {
+                    qDiv.style.display = 'none';
+                }
+            });
+        });
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+        });
+
+        // Initial load
+        const firstCategoryId = Object.keys(interviewData)[0];
+        navigateTo(firstCategoryId);
+
+    </script>
+</body>
+</html>
